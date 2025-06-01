@@ -1,3 +1,6 @@
+using System.Globalization;
+using System.Text.RegularExpressions;
+
 namespace DesafioFundamentos.Models
 {
     public class Estacionamento
@@ -12,12 +15,58 @@ namespace DesafioFundamentos.Models
             this.precoPorHora = precoPorHora;
         }
 
+        public bool ValidarPlaca(string placa, int modeloPlaca)
+        {
+            if(placa.Length == 7 && veiculos.Contains(placa) == false)
+            {
+                switch(modeloPlaca)
+                {
+                    case 1:
+                        string pattern1 = @"^[A-Z]{3}\d{1}[A-Z]{1}\d{2}$";
+                        return Regex.IsMatch(placa, pattern1);
+                    case 2:
+                        string pattern2 = @"^[A-Z]{3}\d{4}$";
+                        return Regex.IsMatch(placa, pattern2);
+                    default:
+                        return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public void AdicionarVeiculo()
         {
             // TODO: Pedir para o usuário digitar uma placa (ReadLine) e adicionar na lista "veiculos"
-            Console.WriteLine("Digite a placa do veículo para estacionar:");
-            string placa = Console.ReadLine();
-            veiculos.Add(placa);
+            {
+                while (true)
+                {
+                    Console.WriteLine("\nDigite o tipo da placa");
+                    Console.WriteLine("\n 1- Mercosul (LLLNLNN) ou");
+                    Console.Write("\n 2- Modelo antigo (AAA0000)");
+
+                    int modeloPlaca = Convert.ToInt32(Console.ReadLine());
+
+                    Console.WriteLine("Digite a Placa");
+                    string placa = Console.ReadLine().ToUpper();
+
+                    {
+                        if ( ValidarPlaca(placa, modeloPlaca) )
+                        {
+                            veiculos.Add(placa);
+                            Console.WriteLine("Veículo Adicionado com sucesso");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Placa Inválida, tente novamente");
+                        }
+                    }
+                }
+
+            }
         }
 
         public void RemoverVeiculo()
